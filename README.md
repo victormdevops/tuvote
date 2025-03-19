@@ -6,6 +6,7 @@ It is designed as a **portfolio-ready project** to showcase DevOps, CI/CD, and o
 ---
 
 ## 🚀 Features
+
 - **Backend**: Node.js + Express + MongoDB (with authentication, voting, elections, candidates, and dashboard APIs).
 - **Frontend**: React application served via Nginx.
 - **Dockerized**: Both backend and frontend run inside Docker containers.
@@ -19,17 +20,20 @@ It is designed as a **portfolio-ready project** to showcase DevOps, CI/CD, and o
 ## 🐳 Docker Setup
 
 ### Backend (Express + MongoDB)
+
 - Dockerfile builds the backend app.
 - Exposes port **3001**.
 - Uses `prom-client` to expose metrics at `/metrics`.
 
 ### Frontend (React + Nginx)
+
 - Dockerfile builds the React app.
 - Served by Nginx on port **81** (mapped to host `8081`).
 
 ---
 
 ## 🧩 Docker Compose
+
 `docker-compose.yml` ties everything together:
 
 - **backend** → `tuvote-backend`
@@ -66,14 +70,14 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
-````
+```
 
 ---
 
 ## ⚙️ CI/CD (GitHub Actions)
 
-* A **pipeline** is configured in `.github/workflows/ci.yml`.
-* On every push:
+- A **pipeline** is configured in `.github/workflows/ci.yml`.
+- On every push:
 
   1. Install dependencies.
   2. Run tests.
@@ -88,17 +92,18 @@ This ensures the repository always stays **green** and deployable.
 
 ### Prometheus
 
-* Configured via `prometheus.yml`.
-* Scrapes backend metrics every 5s.
-* Accessible at: [http://localhost:9090](http://localhost:9090)
+- Configured via `prometheus.yml`.
+- Scrapes backend metrics every 5s.
+- Accessible at: [http://localhost:9090](http://localhost:9090)
 
 ### Grafana
 
-* Runs on port **3000**.
-* First-time setup requires adding Prometheus as a datasource:
+- Runs on port **3000**.
+- First-time setup requires adding Prometheus as a datasource:
 
-  * URL: `http://tuvote-prometheus:9090`
-* Dashboards can be created from UI (custom panels for request counts, response times, error rates, etc.).
+  - URL: `http://tuvote-prometheus:9090`
+
+- Dashboards can be created from UI (custom panels for request counts, response times, error rates, etc.).
 
 ---
 
@@ -119,10 +124,70 @@ This ensures the repository always stays **green** and deployable.
 
 3. Access services:
 
-   * **Frontend** → [http://localhost:8081](http://localhost:8081)
-   * **Backend API** → [http://localhost:3001](http://localhost:3001)
-   * **Prometheus** → [http://localhost:9090](http://localhost:9090)
-   * **Grafana** → [http://localhost:3000](http://localhost:3000)
+   - **Frontend** → [http://localhost:8081](http://localhost:8081)
+   - **Backend API** → [http://localhost:3001](http://localhost:3001)
+   - **Prometheus** → [http://localhost:9090](http://localhost:9090)
+   - **Grafana** → [http://localhost:3000](http://localhost:3000)
 
+## Deployment Proof (Local VPS Simulation)
 
+### Docker Compose
 
+![docker ps](screenshots/docker-compose.png)
+
+### Docker Images
+
+![docker ps](screenshots/images.png)
+
+### Docker Ps
+
+![docker ps](screenshots/docker-ps.png)
+
+### Docker Logs
+
+![docker ps](screenshots/logs.png)
+
+### Frontend
+
+![frontend](screenshots/frontend.png)
+
+### Backend
+
+![backend](screenshots/backend.png)
+
+### GitHub Actions Build
+
+![github actions](screenshots/ci.png)
+
+### Prometheus
+
+![backend](screenshots/prometheus.png)
+
+### Grafana
+
+![backend](screenshots/grafana.png)
+
+## Security and Secrets Management
+
+- No hard-coded credentials
+- Secrets (such as `DATABASE_URL`) managed via GitHub Secrets
+- Docker images built following the least-privilege principle
+
+---
+
+## Why This Project Matters for DevOps
+
+This project demonstrates:
+
+- Multi-service containerization with Docker and Docker Compose
+- Infrastructure as Code
+- Automated CI/CD with GitHub Actions
+- Secure secret injection
+- Health checking and automatic log collection
+- Deployment-ready stack that can be extended with full observability
+
+---
+
+## Author
+
+Victor Muthomi
