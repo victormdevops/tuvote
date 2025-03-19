@@ -29,9 +29,12 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-  })
+  }),
 );
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
