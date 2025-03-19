@@ -1,17 +1,42 @@
 services:
   backend:
     build: ./tuvote-backend
-    image: tuvote-backend:latest # 👈 assign explicit image name
+    image: tuvote-backend:latest
+    container_name: tuvote-backend
     ports:
       - "3001:3001"
     env_file:
-      - ./tuvote-backend/.env # DATABASE_URL for Neon
+      - ./tuvote-backend/.env
 
   frontend:
     build: ./tuvote-frontend
-    image: tuvote-frontend:latest # 👈 assign explicit image name
+    image: tuvote-frontend:latest
     container_name: tuvote-frontend
     ports:
       - "8081:81"
     depends_on:
       - backend
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tuvote-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tuvote-grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
+volumes:
+  grafana-data:

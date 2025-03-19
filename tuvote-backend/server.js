@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import config from "./config/config.js"; // import the config
+import client from "prom-client";
 
 import authRoutes from "./routes/authRoutes.js";
 import electionRoutes from "./routes/electionRoutes.js";
@@ -9,6 +10,10 @@ import candidateRoutes from "./routes/candidateRoutes.js";
 import voteRoutes from "./routes/voteRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
+
+// collect default Node.js + process metrics
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
 
 const app = express();
 
@@ -31,6 +36,11 @@ app.use(
     credentials: true,
   }),
 );
+
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok" });
