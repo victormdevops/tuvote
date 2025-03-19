@@ -124,34 +124,5 @@ This ensures the repository always stays **green** and deployable.
    * **Prometheus** → [http://localhost:9090](http://localhost:9090)
    * **Grafana** → [http://localhost:3000](http://localhost:3000)
 
----
-
-## 🎯 Why This Project Matters (Portfolio / CV)
-
-This project demonstrates **real-world DevOps & full-stack engineering skills**:
-
-* Building **Dockerized microservices** (backend + frontend).
-* Orchestrating with **Docker Compose**.
-* Implementing **CI/CD pipelines** for automation.
-* Adding **observability** (Prometheus + Grafana).
-* Presenting metrics and dashboards like a production system.
-
-It is ideal for showcasing to recruiters and companies:
-
-> “I can design, build, containerize, automate, and monitor a full-stack system end-to-end.”
-
----
-
-## 📌 Next Steps
-
-* (Optional) Add **Loki** for centralized logging with Grafana.
-* (Optional) Provision Grafana dashboards automatically via config files.
-* Deploy to a **VPS or cloud provider** for a live demo.
-
----
-
-```
-
----
 
 
