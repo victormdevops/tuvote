@@ -1,34 +1,36 @@
-# Build Stage
-FROM node:16-alpine as build
-
+# ---- build stage ----
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy package.json and package-lock.json for installing dependencies
+# install dependencies
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Install production dependencies only
-RUN npm install --production
-
-# Copy the application code
+# copy source code
 COPY . .
 
-# Run the app build (ensure this command is valid in your package.json)
-RUN npm run build
-
-# Production Stage
-FROM node:16-alpine
-
+# ---- runtime stage ----
+FROM node:20-alpine AS runtime
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy only production node_modules from the build stage
-COPY --from=build /app/node_modules /app/node_modules
+# non-root user
+RUN addgroup -S nodegrp && adduser -S nodeusr -G nodegrp
 
-# Copy only essential files to the production image
-COPY . .
+# copy runtime files
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app ./
+# 👆 brings in config/, controllers/, middleware/, models/, routes/, utils/, server.js, etc.
 
-# Expose the port
-EXPOSE 5000
+ARG PORT=3000
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
-# Start the app
-CMD ["npm", "start"]
+# healthcheck (adjust path if your app uses /api/health)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget -qO- "http://localhost:${PORT}/health" || exit 1
+
+USER nodeusr
+CMD ["node", "server.js"]
 
