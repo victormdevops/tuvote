@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./tuvote-backend
+    image: tuvote-backend:latest # 👈 assign explicit image name
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./tuvote-backend/.env # DATABASE_URL for Neon
+
+  frontend:
+    build: ./tuvote-frontend
+    image: tuvote-frontend:latest # 👈 assign explicit image name
+    container_name: tuvote-frontend
+    ports:
+      - "8081:81"
+    depends_on:
+      - backend
